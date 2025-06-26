@@ -1,8 +1,8 @@
 require('dotenv').config({ path: '../.env' });
-require('./sockets')(io);
 
 const express = require('express');
 const http = require('http');
+const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 
@@ -18,6 +18,8 @@ const tasksRouter = require('./routes/tasks.routes');
 
 connectDB();
 
+app.use(cors());
+
 app.use(express.json());
 
 // Middleware para exponer io a los controladores
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
   req.io = io;
   next();
 });
+
+require('./sockets')(io);
+
 
 // Rutas
 app.use('/api/tareas', tasksRouter);

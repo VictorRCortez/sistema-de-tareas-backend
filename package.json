@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "- **Descripción**: Crea una cuenta en MongoDB Atlas, configura el acceso a la base de datos y obtén la URI de conexión.\r - **Capturas de pantalla**:\r   - ![Creación del clúster](./documentation/Creacion-del-cluster.png)\r   - ![Configuración del usuario parte 1](./documentation/Configuracion-usuario1.png)\r   - ![Configuración del usuario parte 2](./documentation/Configuracion-usuario2.png)\r   - ![URI de conexión](./documentation/URI-conexion.png)",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.18.2",
     "mongoose": "7.0",
