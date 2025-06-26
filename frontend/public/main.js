@@ -1,4 +1,5 @@
-const socket = io("http://localhost:3000");
+//const socket = io("http://localhost:3000");
+const socket = io("https://sistema-de-tareas-backend.onrender.com/")
 
 const form = document.getElementById("formTarea");
 const listaTareas = document.getElementById("listaTareas");
@@ -20,7 +21,9 @@ form.addEventListener("submit", async (e) => {
   const tarea = { title: titulo, description: descripcion, status: estado };
 
   if (tareaEditandoId) {
-    await fetch(`http://localhost:3000/api/tareas/${tareaEditandoId}`, {
+    //https://sistema-de-tareas-backend.onrender.com/
+    //await fetch(`https://sistema-de-tareas-backend.onrender.com/api/tareas/${tareaEditandoId}`,
+    await fetch(`https://sistema-de-tareas-backend.onrender.com/api/tareas/${tareaEditandoId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tarea),
@@ -29,7 +32,7 @@ form.addEventListener("submit", async (e) => {
     tareaEditandoId = null;
     document.querySelector("button[type='submit']").textContent = "Agregar";
   } else {
-    await fetch("http://localhost:3000/api/tareas", {
+    await fetch("https://sistema-de-tareas-backend.onrender.com/api/tareas", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tarea),
@@ -47,7 +50,7 @@ socket.on("task-updated", () => renderizarTareas());
 socket.on("task-deleted", () => renderizarTareas());
 
 async function renderizarTareas() {
-  const res = await fetch("http://localhost:3000/api/tareas");
+  const res = await fetch("https://sistema-de-tareas-backend.onrender.com/api/tareas");
   const tareas = await res.json();
 
   tareasActuales = tareas; // guardamos para filtro sin re-fetch
@@ -126,7 +129,7 @@ function filtrarTareas(estado) {
 
 
 async function eliminarTarea(id) {
-  await fetch(`http://localhost:3000/api/tareas/${id}`, { method: "DELETE" });
+  await fetch(`https://sistema-de-tareas-backend.onrender.com/api/tareas/${id}`, { method: "DELETE" });
 }
 
 renderizarTareas();

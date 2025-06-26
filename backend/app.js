@@ -13,6 +13,14 @@ const io = require('socket.io')(server, {
   }
 });
 
+// Servir archivos estáticos desde /frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Ruta para servir index.html directamente
+app.get('/tareas/index', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/view/index.html'));
+});
+
 const connectDB = require('./database');
 const tasksRouter = require('./routes/tasks.routes');
 
