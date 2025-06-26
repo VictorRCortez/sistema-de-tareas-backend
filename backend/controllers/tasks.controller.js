@@ -33,8 +33,8 @@ exports.createTask = async (req, res) => {
     const newTask = new Task({
       title: req.body.title,
       description: req.body.description || '',
+      status: req.body.status || 'pendiente'
     });
-
     const savedTask = await newTask.save();
     res.status(201).json(savedTask); // Enviamos la respuesta solo una vez
 

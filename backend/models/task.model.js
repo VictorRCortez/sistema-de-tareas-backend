@@ -11,9 +11,10 @@ const TaskSchema = new mongoose.Schema({
     default: '',
   },
   status: {
-    type: Boolean,
-    default: false, // false = pendiente, true = completada
-  },
+    type: String,
+    enum: ['pendiente', 'en progreso', 'completada'],
+    default: 'pendiente',
+  },  
   createdAt: {
     type: Date,
     default: Date.now,
