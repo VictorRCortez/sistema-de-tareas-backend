@@ -12,7 +12,7 @@
 	<body class="bg-light">
 		<div class="container mt-5">
 			<h1 class="text-center mb-4">📋 Gestión de Tareas</h1>
-
+			<div id="mensajeAlerta" class="mt-2"></div>
 			<form id="formTarea" class="row g-3">
 				<div class="col-md-6">
 					<input
@@ -73,7 +73,52 @@
 			<div id="listaTareas" class="mt-4 row"></div>
 		</div>
 
+		<!-- Modal de confirmación para eliminar tarea -->
+		<div
+			class="modal fade"
+			id="modalEliminar"
+			tabindex="-1"
+			aria-labelledby="modalEliminarLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-danger text-white">
+						<h5 class="modal-title" id="modalEliminarLabel">
+							Confirmar Eliminación
+						</h5>
+						<button
+							type="button"
+							class="btn-close btn-close-white"
+							data-bs-dismiss="modal"
+							aria-label="Cerrar"
+						></button>
+					</div>
+					<div class="modal-body">
+						¿Estás seguro que deseas eliminar esta tarea?
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-dismiss="modal"
+						>
+							Cancelar
+						</button>
+						<button
+							type="button"
+							class="btn btn-danger"
+							id="btnConfirmarEliminar"
+						>
+							Eliminar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 		<script src="../public/main.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	</body>
 </html>

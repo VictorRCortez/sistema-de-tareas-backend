@@ -35,10 +35,19 @@ exports.createTask = async (req, res) => {
       description: req.body.description || '',
       status: req.body.status || 'pendiente'
     });
-    const savedTask = await newTask.save();
-    res.status(201).json(savedTask); // Enviamos la respuesta solo una vez
 
-    req.io.emit('task-created', savedTask); // Emitimos después de enviar respuesta
+    // Asignar fechas según el estado inicial
+    if (newTask.status === 'en progreso') {
+      newTask.startedAt = new Date();
+    }
+    if (newTask.status === 'completada') {
+      newTask.startedAt = new Date();
+      newTask.completedAt = new Date();
+    }
+
+    const savedTask = await newTask.save();
+    res.status(201).json(savedTask);
+    req.io.emit('task-created', savedTask);
   } catch (error) {
     res.status(500).json({ error: 'Error al crear la tarea' });
   }
@@ -47,16 +56,34 @@ exports.createTask = async (req, res) => {
 // PUT /tareas/:id
 exports.updateTask = async (req, res) => {
   try {
-    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-
-    if (!updatedTask) {
+    const existingTask = await Task.findById(req.params.id);
+    if (!existingTask) {
       return res.status(404).json({ error: 'Tarea no encontrada' });
     }
 
-    res.json(updatedTask); // Enviar primero la respuesta
-    req.io.emit('task-updated', updatedTask); // Luego emitir evento
+        // ❌ Si la tarea ya está completada, no se permite editar el estado
+        if (existingTask.status === 'completada' && req.body.status !== 'completada') {
+          return res.status(400).json({ error: 'No se puede modificar una tarea completada.' });
+        }
+
+    const prevStatus = existingTask.status;
+    existingTask.title = req.body.title || existingTask.title;
+    existingTask.description = req.body.description || existingTask.description;
+    existingTask.status = req.body.status || existingTask.status;
+
+    // Asignar fechas si cambia el estado
+    if (prevStatus !== 'en progreso' && existingTask.status === 'en progreso' && !existingTask.startedAt) {
+      existingTask.startedAt = new Date();
+    }
+
+    if (prevStatus !== 'completada' && existingTask.status === 'completada' && !existingTask.completedAt) {
+      if (!existingTask.startedAt) existingTask.startedAt = new Date(); // por si no pasó por "en progreso"
+      existingTask.completedAt = new Date();
+    }
+
+    const updatedTask = await existingTask.save();
+    res.json(updatedTask);
+    req.io.emit('task-updated', updatedTask);
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar la tarea' });
   }
